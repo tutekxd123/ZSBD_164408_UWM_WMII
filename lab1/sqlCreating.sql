@@ -7,7 +7,7 @@ CREATE TABLE EMPLOYEES(
 	hire_date DATE NOT NULL,
 	job_id INT,
 	salary NUMBER(20,2) DEFAULT 0,
-	commission_pct INT NOT NULL,
+	commission_pct NUMBER(2,2) NOT NULL,
 	manager_id INT,
 	department_ID INT
 );
@@ -18,23 +18,26 @@ CREATE TABLE JOBS(
 	job_id INT NOT NULL PRIMARY KEY,
 	job_title VARCHAR2(200) NOT NULL,
 	max_salary NUMBER(20,2) NOT NULL,
-	min_salary NUMBER(20,2) NOT NULL CHECK(min_salary<=max_salary-2000)
+	min_salary NUMBER(20,2) NOT NULL,
+    CONSTRAINT checkSalaryMin CHECK (min_salary<=max_salary-2000)
 );
--- Check Couldn't reference for other column?
+-- OK
 CREATE TABLE JOB_HISTORY(
 	employee_ID INT NOT NULL,
-	start_date DATE NOT NULL DEFAULT NOW(),
+	start_date DATE DEFAULT CURRENT_DATE NOT NULL,
 	end_date DATE,
 	job_id INT,
 	department_ID INT NOT NULL,
 	PRIMARY KEY (employee_ID, start_date,job_id,end_date)
 );
+-- OK
 CREATE TABLE DEPARTMENTS(
-	department_id INT NOT NULL,
+	department_id INT PRIMARY KEY NOT NULL,
 	department_name VARCHAR2(200) NOT NULL,
 	manager_id int DEFAULT NULL,
 	location_id int DEFAULT NULL
 )
+-- OK
 CREATE TABLE LOCATIONS(
 	location_id INT PRIMARY KEY NOT NULL,
 	street_address VARCHAR2(200) NOT NULL,
@@ -44,19 +47,40 @@ CREATE TABLE LOCATIONS(
 	country_id INT NOT NULL
 
 );
+-- OK
 CREATE TABLE COUNTRIES(
 	country_id INT PRIMARY KEY NOT NULL,
 	country_name VARCHAR2(40) NOT NULL,
 	region_id INT NOT NULL
-)
+);
+-- OK
 CREATE TABLE REGIONS(
 	region_id INT PRIMARY KEY NOT NULL,
 	region_name VARCHAR(50) NOT NULL
-)
+);
+-- Teraz Pora na klucze obce
+ALTER TABLE EMPLOYEES
+    ADD CONSTRAINT fk_EMPLOYEES_MANAGER_ID
+        FOREIGN KEY (manager_Id)
+        REFERENCES EMPLOYEES(employee_id);
 
+ALTER TABLE EMPLOYEES
+    ADD CONSTRAINT fk_job_id
+        FOREIGN KEY (job_id)
+        REFERENCES JOBS(job_id);
 
+ALTER TABLE EMPLOYEES
+    ADD CONSTRAINT fk_DEPARTMENT_ID
+        FOREIGN KEY (DEPARTMENT_ID)
+        REFERENCES DEPARTMENTS(DEPARTMENT_ID);
 
+-- OK
 
+ALTER TABLE JOB_HISTORY
+	ADD CONSTRAINT fk_job_history_job FOREIGN KEY (job_id) REFERENCES JOBS(job_id);
+
+ALTER TABLE JOB_HISTORY
+	ADD CONSTRAINT Fk_job_history_employ FOREIGN KEY (employee_ID) REFERENCES EMPLOYEES(employee_id);
 
 
 
