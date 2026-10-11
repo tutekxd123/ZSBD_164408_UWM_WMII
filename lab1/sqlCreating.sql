@@ -11,12 +11,16 @@ CREATE TABLE EMPLOYEES(
 	manager_id INT,
 	department_ID INT
 );
+-- OK!
+
+
 CREATE TABLE JOBS(
 	job_id INT NOT NULL PRIMARY KEY,
 	job_title VARCHAR2(200) NOT NULL,
 	max_salary NUMBER(20,2) NOT NULL,
 	min_salary NUMBER(20,2) NOT NULL CHECK(min_salary<=max_salary-2000)
 );
+-- Check Couldn't reference for other column?
 CREATE TABLE JOB_HISTORY(
 	employee_ID INT NOT NULL,
 	start_date DATE NOT NULL DEFAULT NOW(),
