@@ -4,10 +4,10 @@ CREATE TABLE EMPLOYEES(
 	last_name VARCHAR2(200) NOT NULL,
 	email VARCHAR2(200) NOT NULL,
 	phone_number VARCHAR2(30) NOT NULL,
-	hire_date DATE NOT NULL,
+	hire_date DATE DEFAULT CURRENT_DATE NOT NULL,
 	job_id INT,
-	salary NUMBER(20,2) DEFAULT 0,
-	commission_pct NUMBER(2,2) NOT NULL,
+	salary DECIMAL(20,2) DEFAULT 0,
+	commission_pct DECIMAL(4,2) NOT NULL,
 	manager_id INT,
 	department_ID INT
 );
@@ -17,8 +17,8 @@ CREATE TABLE EMPLOYEES(
 CREATE TABLE JOBS(
 	job_id INT NOT NULL PRIMARY KEY,
 	job_title VARCHAR2(200) NOT NULL,
-	max_salary NUMBER(20,2) NOT NULL,
-	min_salary NUMBER(20,2) NOT NULL,
+	max_salary DECIMAL(20,2) NOT NULL,
+	min_salary DECIMAL(20,2) NOT NULL,
     CONSTRAINT checkSalaryMin CHECK (min_salary<=max_salary-2000)
 );
 -- OK
@@ -93,6 +93,31 @@ ALTER TABLE LOCATIONS
 
 ALTER TABLE COUNTRIES
 	ADD CONSTRAINT fk_countries_region FOREIGN KEY (region_id) REFERENCES REGIONS(region_id);
+
+
+-- ZAD 2 INSERT 4 JOBS
+
+INSERT INTO JOBS(job_id,job_title,max_salary, min_salary) VALUES (1,'CEO',90000,80000);
+INSERT INTO JOBS(job_id,job_title,max_salary, min_salary) VALUES (2,'Enginner Software',20000,15000);
+INSERT INTO JOBS(job_id,job_title,max_salary, min_salary) VALUES (3,'Tester Software',20000,15000);
+INSERT INTO JOBS(job_id,job_title,max_salary, min_salary) VALUES (4,'accountant',7000,5000);
+
+-- ZAD 3 Insert 4 EMPLOYES
+INSERT INTO EMPLOYEES(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,commission_pct,manager_id,department_ID)
+	VALUES (1,'Piotr','Marzec','TJMBH!@gmail.com','+48601904692',DEFAULT,1,90000,1,NULL,NULL);
+
+INSERT INTO EMPLOYEES(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,commission_pct,manager_id,department_ID)
+	VALUES (2,'Pawel','Marzec','TJMBH!MLAS@gmail.com','+48601904231',DEFAULT,1,70000,1,NULL,NULL);
+
+INSERT INTO EMPLOYEES(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,commission_pct,manager_id,department_ID)
+	VALUES (3,'Kowal','Kowalczyk','tutsonmarima@protonmail.com','+48501904231',DEFAULT,2,15000,0,1,NULL);
+INSERT INTO EMPLOYEES(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,commission_pct,manager_id,department_ID)
+	VALUES (4,'Marlena','Górska','marzena1992@wp.pl','+48501954231',DEFAULT,3,8000,0,2,NULL);
+
+
+
+
+
 
 
 
