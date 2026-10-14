@@ -112,11 +112,23 @@ INSERT INTO EMPLOYEES(employee_id,first_name,last_name,email,phone_number,hire_d
 INSERT INTO EMPLOYEES(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,commission_pct,manager_id,department_ID)
 	VALUES (3,'Kowal','Kowalczyk','tutsonmarima@protonmail.com','+48501904231',DEFAULT,2,15000,0,1,NULL);
 INSERT INTO EMPLOYEES(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,commission_pct,manager_id,department_ID)
-	VALUES (4,'Marlena','Górska','marzena1992@wp.pl','+48501954231',DEFAULT,3,8000,0,2,NULL);
+	VALUES (4,'Marlena','Górska','marzena1992@wp.pl','+48501954231',DEFAULT,4,8000,0,2,NULL);
+-- Zad 4 
+UPDATE EMPLOYEES SET MANAGER_ID=1 where EMPLOYEES.EMPLOYEE_ID in('2','3')
 
+-- Zad 5 (lower celowo dla znalezienia 'Software')
+UPDATE JOBS set MIN_SALARY = MIN_SALARY+500, MAX_SALARY=MAX_SALARY+500
+	WHERE LOWER(JOBS.JOB_TITLE) LIKE '%b%' or LOWER(JOB_TITLE) LIKE '%s%'
 
+-- Zad 6 (Update dla kluczy obcych, zeby delete sie powiodl, oczywiscie powinnismy zaplanowac to)
 
+UPDATE EMPLOYEES set EMPLOYEES.job_id=NULL
+WHERE EMPLOYEES.job_id IN (SELECT JOBS.job_id from JOBS where JOBS.max_salary>=9000)
+DELETE JOBS WHERE MAX_SALARY>=9000
 
+-- Zad 7 Technicznie moze byc problem jezeli coś odwoluje sie do tej tabeli
+-- Usuwa odrazu "constraints" 
+DROP TABLE DEPARTMENTS CASCADE CONSTRAINT 
 
 
 
