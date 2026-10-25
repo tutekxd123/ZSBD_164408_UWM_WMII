@@ -95,8 +95,68 @@ where EMPLOYEES.DEPARTMENT_ID IN (20,50) and SALARY BETWEEN 2000 AND 7000
 ORDER BY LAST_NAME ASC;
 
 --Podzadanie2
-SELECT EMPLOYEES.HIRE_DATE AS "DATA_ZATRUDNIENIA",EMPLOYEES.LAST_NAME AS "NAZWISKO" ,M.HIRE_DATE AS "DATA ZATRUDNIENIA MANAGERA" FROM EMPLOYEES
-LEFT JOIN EMPLOYEES M ON EMPLOYEES.EMPLOYEE_ID=M.EMPLOYEE_ID
-WHERE EXTRACT(YEAR FROM M.HIRE_DATE)=2005;
+SELECT hire_date, last_name, &kolumnaUser
+FROM employees
+WHERE manager_id IS NOT NULL
+  AND EXTRACT(YEAR FROM hire_date) = 2005
+ORDER BY &kolumnaUser;
 
 --Podzadanie3
+SELECT CONCAT(CONCAT(FIRST_NAME, ' '),LAST_NAME) as "Imie i Nazwisko",SALARY,PHONE_NUMBER FROM EMPLOYEES
+WHERE SUBSTR(LAST_NAME,3,1)='e' and FIRST_NAME LIKE '%&imiefragment%'
+ORDER BY "Imie i Nazwisko" DESC, SALARY ASC;
+
+--PodZadanie4
+SELECT FIRST_NAME, LAST_NAME,ROUND(months_between(CURRENT_DATE,HIRE_DATE)) AS "Liczba_miesiecy_przepracowanych",
+case 
+    when ROUND(months_between(CURRENT_DATE,HIRE_DATE))<=150 then (salary/100)*10
+    when ROUND(months_between(CURRENT_DATE,HIRE_DATE)) BETWEEN 150 and 200 then (salary/100)*20
+    when ROUND(months_between(CURRENT_DATE,HIRE_DATE))>=200 then (salary/100)*30
+end as "Wysokość_Dodatku"
+from EMPLOYEES
+ORDER BY "Liczba_miesiecy_przepracowanych";
+
+--PodZadanie 5
+
+
+SELECT * FROM (
+select d.DEPARTMENT_NAME, min(salary) as "min_salary", ROUND(avg(salary)) as "srednia" from employees
+inner join departments d on d.department_ID = employees.department_id
+group by d.DEPARTMENT_NAME) d1
+where d1."min_salary">=5000;
+
+--PodZadanie 6
+
+select e1.last_name, e1.department_ID,d.DEPARTMENT_NAME, e1.job_ID from employees e1
+inner join departments d on d.DEPARTMENT_ID = e1.DEPARTMENT_ID 
+inner join locations l on d.location_id=l.location_id
+where l.City = 'Toronto';
+
+--PodZadanie 7
+--Teoretycznie pracuja sami ze soba, nie wiem czy to wypisywac, ale niech bedzie
+
+select e1.first_name, e1.last_name,e2.first_name,e2.last_name from employees e1
+inner join employees e2 on e1.DEPARTMENT_ID = e2.DEPARTMENT_ID
+where e1.first_name='Jennifer';
+
+----PodZadanie 8
+
+select d.department_ide from DEPARTMENTS d
+left join employees e1 on e1.DEPARTMENT_ID = d.department_ID
+where e1.EMPLOYEE_ID is NULL;
+
+---PodZadanie 9
+select e1.first_name, e1.job_id,d.department_name,e1.salary,j.grade from employees e1
+inner join departments d on e1.department_id=d.department_id
+inner join JOB_GRADES j on e1.salary BETWEEN j.min_salary and j.max_salary
+
+--PodZadanie 10
+select e1.first_name, e1.last_name, salary from employees e1
+where salary >(select avg(employees.salary) from employees )
+order by salary DESC
+
+--PodZadanie 11
+select DISTINCT e1.EMPLOYEE_ID,e1.first_name,e1.last_name from employees e1
+inner join employees e2 on e2.department_id=e1.department_id and e2.last_name LIKE '%n%'
+
+--PodZadanie 12
