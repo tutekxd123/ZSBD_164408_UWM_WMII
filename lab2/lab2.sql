@@ -160,3 +160,5 @@ select DISTINCT e1.EMPLOYEE_ID,e1.first_name,e1.last_name from employees e1
 inner join employees e2 on e2.department_id=e1.department_id and e2.last_name LIKE '%n%'
 
 --PodZadanie 12
+select employees.first_name,employees.last_name, ROUND(CURRENT_DATE-HIRE_DATE) from employees
+where CURRENT_DATE-HIRE_DATE >= (select  AVG(ROUND(CURRENT_DATE-HIRE_DATE)) FROM EMPLOYEES)
