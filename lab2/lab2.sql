@@ -148,17 +148,43 @@ where e1.EMPLOYEE_ID is NULL;
 ---PodZadanie 9
 select e1.first_name, e1.job_id,d.department_name,e1.salary,j.grade from employees e1
 inner join departments d on e1.department_id=d.department_id
-inner join JOB_GRADES j on e1.salary BETWEEN j.min_salary and j.max_salary
+inner join JOB_GRADES j on e1.salary BETWEEN j.min_salary and j.max_salary;
 
 --PodZadanie 10
 select e1.first_name, e1.last_name, salary from employees e1
 where salary >(select avg(employees.salary) from employees )
-order by salary DESC
+order by salary DESC;
 
 --PodZadanie 11
 select DISTINCT e1.EMPLOYEE_ID,e1.first_name,e1.last_name from employees e1
-inner join employees e2 on e2.department_id=e1.department_id and e2.last_name LIKE '%n%'
+inner join employees e2 on e2.department_id=e1.department_id and e2.last_name LIKE '%n%';
 
 --PodZadanie 12
 select employees.first_name,employees.last_name, ROUND(CURRENT_DATE-HIRE_DATE) from employees
-where CURRENT_DATE-HIRE_DATE >= (select  AVG(ROUND(CURRENT_DATE-HIRE_DATE)) FROM EMPLOYEES)
+where CURRENT_DATE-HIRE_DATE >= (select  AVG(ROUND(CURRENT_DATE-HIRE_DATE)) FROM EMPLOYEES);
+
+--PodZadanie 13
+select d.DEPARTMENT_NAME, COUNT(*) as "Liczba Pracowników", ROUND(AVG(salary)) as "Średnie Wynagrodzenie" from departments d
+inner join employees e on e.DEPARTMENT_ID = d.DEPARTMENT_ID
+GROUP BY d.department_name
+order by COUNT(*) DESC;
+
+--PodZadanie 14
+select first_name, last_name from employees
+where salary<=(
+select min(salary) from departments d
+inner join employees e on e.department_id=d.department_id and d.department_name='IT');
+--PodZadanie 15
+select d. department_id,d.department_name from departments d
+inner join employees e on e.department_id = d.department_id and e.salary>=(select avg(salary) from employees)
+group by d.department_id, d.department_name;
+
+--Podzapytanie 16
+select * from (
+
+select d.department_name,ROUND(avg(e.salary)) as "srednie_zarobki" from departments d
+inner join employees e on e.department_id=d.department_id
+group by d.department_name ) d1
+order by d1."srednie_zarobki" DESC
+
+FETCH FIRST 5 ROWS ONLY;
