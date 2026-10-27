@@ -188,3 +188,31 @@ group by d.department_name ) d1
 order by d1."srednie_zarobki" DESC
 
 FETCH FIRST 5 ROWS ONLY;
+
+--PodZapytanie 17
+
+-- JOIN EXplosion (jezeli pracownicy nie maja department to nie maja lokalizacji)
+select r.REGION_NAME,COUNT( DISTINCT  c.country_name) as "Liczba krajów", c.country_name from regions r
+inner join countries c on c.REGION_ID = r.REGION_ID
+inner join locations l on l.country_ID = c.country_id
+inner join departments d on d.location_id = l.location_id
+inner join employees e on e.department_id = d.department_id
+group by r.REGION_NAME
+
+--Podzapytanie 18
+select e1.first_name, e1.last_name from employees e1
+inner join employees e2 on e1.manager_id=e2.employee_id
+where e1.salary>e2.salary
+--PodZapytanie 19
+select to_char(hire_date,'Month'), count(*) from employees
+group by to_char(hire_date,'Month')
+--Podzapytanie 20
+select * from (select d.department_name,ROUND(AVG(salary)) as "srednie wynagrodzenie" from departments d
+inner join employees e on e.department_id= d.department_id
+group by d.department_name) d1
+
+order by d1."srednie wynagrodzenie" DESC
+FETCH FIRST 3 ROWS ONLY
+
+
+
