@@ -53,3 +53,31 @@ group BY d.DEPARTMENT_ID, d.DEPARTMENT_NAME
 HAVING COUNT(*)>4)
 
 insert into "v_departments_count_employees" (DEPARTMENT_ID,DEPARTMENT_NAME,"Liczba pracownikow","średnia wypłata") VALUES(101,'Finance2',3,3000); //nie można modyfikować kolumny, która odwzorowuje się do tabeli nie zachowującej kluczy
+
+
+//8. Stwórz analogiczny widok zadania 2 z dodaniem warunku ‘WITH CHECK OPTION’
+CREATE OR REPLACE view "v_wysokie_pensje_8task" as 
+select * from employees e
+where e.salary>=12000
+WITH CHECK OPTION;
+
+    //8.a.I (nie działa)
+        INSERT INTO "v_wysokie_pensje_8task"(EMPLOYEE_ID,FIRST_NAME,LAST_NAME,EMAIL,PHONE_NUMBER,HIRE_DATE,JOB_ID,SALARY,COMMISSION_PCT,MANAGER_ID,DEPARTMENT_ID) VALUES
+                                            (9231,'test','test2','test2@wp.pl','515.123.4567','20220321','AD_VP',6000,null,null,90)
+    //8. a.II(OK)
+        INSERT INTO "v_wysokie_pensje_8task"(EMPLOYEE_ID,FIRST_NAME,LAST_NAME,EMAIL,PHONE_NUMBER,HIRE_DATE,JOB_ID,SALARY,COMMISSION_PCT,MANAGER_ID,DEPARTMENT_ID) VALUES
+                                            (9231,'test','test2','test2@wp.pl','515.123.4567','20220321','AD_VP',13000,null,null,90)
+
+//9. Utwórz widok zmaterializowany v_managerowie, który pokaże tylko menedżerów w raz z nazwami ich działów 
+    CREATE MATERIALIZED VIEW "Only_Managers"
+    AS
+
+    SELECT * From employees e
+    inner join jobs j on e.job_id=j.job_id
+    where JOB_TITLE LIKE '%Manager%'
+
+//10. Stwórz widok v_najlepiej_oplacani, który zawiera tylko 10 najlepiej opłacanych pracowników 
+Create VIEW "top10Employees" as
+select * from employees
+order by 'employees.salary' DESC
+fetch first 10 rows only;
